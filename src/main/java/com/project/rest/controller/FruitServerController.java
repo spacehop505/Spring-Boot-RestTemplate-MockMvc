@@ -22,7 +22,7 @@ public class FruitServerController {
     }
 
     // SERVER GET ALL LIST<FRUIT>
-    @GetMapping(value = "/server/fruits")
+    @GetMapping(value = "/server/fruits", produces = "application/json")
     public ReceiveFruitList sendFruitList() {
         ReceiveFruitList receiveFruitList = new ReceiveFruitList();
         receiveFruitList.setMyDataList(fruitDatabase.getList());

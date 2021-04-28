@@ -1,10 +1,12 @@
 package com.project.rest.database;
 
 import com.project.rest.models.Fruit;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ReceiveFruitList {
 
 
