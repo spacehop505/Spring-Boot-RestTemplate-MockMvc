@@ -16,19 +16,18 @@ public class FruitDatabase {
     public FruitDatabase() {
     }
 
-    // CREATE
+    // ADD TO LIST
     public void addToList(Fruit dataObj) {
         myDataList.add(dataObj);
     }
 
-    // READ
+    // RETURN LIST
     public List<Fruit> getList() {
-
         return myDataList;
     }
 
 
-    // SEARCH
+    // SEARCH LIST
     public List<Fruit> searchFromList(int id) {
         List<Fruit> myDataList1 = new ArrayList<>();
         Iterator<Fruit> itr = getList().iterator();
@@ -42,7 +41,7 @@ public class FruitDatabase {
     }
 
 
-    // DELETE
+    // DELETE FROM LIST
     public void deleteFromList(int id) {
         Iterator<Fruit> itr = getList().iterator();
         while (itr.hasNext()) {
@@ -53,7 +52,7 @@ public class FruitDatabase {
         }
     }
 
-    // UPDATE
+    // UPDATE FROM LIST
     public void updateFromList(Fruit receivedFruit) {
         Iterator<Fruit> itr = getList().iterator();
         while (itr.hasNext()) {

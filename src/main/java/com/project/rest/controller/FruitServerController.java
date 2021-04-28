@@ -1,13 +1,13 @@
 package com.project.rest.controller;
 
 import com.project.rest.database.FruitDatabase;
-import com.project.rest.database.RecieveFruitList;
+import com.project.rest.database.ReceiveFruitList;
 import com.project.rest.models.Fruit;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Slf4j
 @RestController
 public class FruitServerController {
 
@@ -23,32 +23,33 @@ public class FruitServerController {
 
     // SERVER GET ALL LIST<FRUIT>
     @GetMapping(value = "/server/fruits")
-    public RecieveFruitList sendFruitList() {
-        RecieveFruitList recieveFruitList = new RecieveFruitList();
-        recieveFruitList.setMyDataList(fruitDatabase.getList());
-        System.out.println("sendFruitList()");
-        return recieveFruitList;
+    public ReceiveFruitList sendFruitList() {
+        ReceiveFruitList receiveFruitList = new ReceiveFruitList();
+        receiveFruitList.setMyDataList(fruitDatabase.getList());
+        log.info("[SERVER] [@GET] - Sending All ArrayList [CLIENT]: " + receiveFruitList.getMyDataList());
+        return receiveFruitList;
     }
 
     // SERVER GET BY ID LIST<FRUIT>
     @GetMapping(value = "/server/fruit/{id}")
-    public RecieveFruitList sendFruitListByID(@PathVariable int id) {
-        RecieveFruitList recieveFruitList = new RecieveFruitList();
-        recieveFruitList.setMyDataList(fruitDatabase.searchFromList(id));
-        return recieveFruitList;
+    public ReceiveFruitList sendFruitListByID(@PathVariable int id) {
+        ReceiveFruitList receiveFruitList = new ReceiveFruitList();
+        receiveFruitList.setMyDataList(fruitDatabase.searchFromList(id));
+        log.info("[SERVER] [@GET] - Sending Searched ArrayList [CLIENT]: " + receiveFruitList.getMyDataList());
+        return receiveFruitList;
     }
 
     // SERVER PUT LIST<FRUIT>
     @PutMapping(value = "/server/create/fruit/{id}")
     public void putReceivedFruit(@RequestBody Fruit fruit) {
-        System.out.println(fruit);
+        log.info("[SERVER] [@PUT] - Received from [CLIENT] add new: " + fruit);
         fruitDatabase.addToList(fruit);
     }
 
     // SERVER POST LIST<FRUIT>
     @PostMapping(value = "/server/update/fruit/{id}")
     public void postReceivedFruit(@RequestBody Fruit fruit) {
-        System.out.println(fruit);
+        log.info("[SERVER] [@POST] - Received from [CLIENT] update: " + fruit);
         fruitDatabase.updateFromList(fruit);
     }
 
@@ -56,6 +57,7 @@ public class FruitServerController {
     @DeleteMapping(value = "/server/delete/fruit/{id}")
     public void deleteReceivedFruit(@PathVariable int id) {
         fruitDatabase.deleteFromList(id);
+        log.info("[SERVER] [@DELETE] - Received from [CLIENT] delete: " + id);
     }
 
 }

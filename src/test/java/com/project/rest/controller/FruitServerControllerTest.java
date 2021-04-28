@@ -3,7 +3,7 @@ package com.project.rest.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.rest.app.MyrestApplication;
+import com.project.rest.app.MyRestApplication;
 import com.project.rest.database.FruitDatabase;
 import com.project.rest.models.Fruit;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes = {MyrestApplication.class})
+@SpringBootTest(classes = {MyRestApplication.class})
 class FruitServerControllerTest {
 
     @Autowired
