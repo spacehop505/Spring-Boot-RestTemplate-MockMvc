@@ -13,7 +13,7 @@ public class FruitServerController {
 
 
     @Autowired
-    FruitDatabase fruitDatabase = new FruitDatabase();
+    FruitDatabase fruitDatabase;
 
 
     @GetMapping(value = "/test")
@@ -39,15 +39,15 @@ public class FruitServerController {
         return receiveFruitList;
     }
 
-    // SERVER PUT LIST<FRUIT>
-    @PutMapping(value = "/server/create/fruit/{id}")
+    // SERVER POST LIST<FRUIT>
+    @PostMapping(value = "/server/create/fruit/{id}")
     public void putReceivedFruit(@RequestBody Fruit fruit) {
         log.info("[SERVER] [@PUT] - Received from [CLIENT] add new: " + fruit);
         fruitDatabase.addToList(fruit);
     }
 
-    // SERVER POST LIST<FRUIT>
-    @PostMapping(value = "/server/update/fruit/{id}")
+    // SERVER PUT LIST<FRUIT>
+    @PutMapping(value = "/server/update/fruit/{id}")
     public void postReceivedFruit(@RequestBody Fruit fruit) {
         log.info("[SERVER] [@POST] - Received from [CLIENT] update: " + fruit);
         fruitDatabase.updateFromList(fruit);

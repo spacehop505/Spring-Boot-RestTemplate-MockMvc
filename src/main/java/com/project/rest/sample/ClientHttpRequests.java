@@ -10,9 +10,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -57,24 +55,40 @@ public class ClientHttpRequests {
 
             HttpEntity entity = response.getEntity();
             String textJsonArray = EntityUtils.toString(entity);
-            System.out.println("test: " + textJsonArray);
+            //System.out.println("test: " + textJsonArray);
 
             fruitListResponse = toListFromJson(textJsonArray);
-            System.out.println(fruitListResponse);
+            // System.out.println(fruitListResponse);
 
             response.close();
-        } catch (ClientProtocolException e) {
-
-        } catch (ParseException e) {
-
-        } catch (URISyntaxException e) {
-
-        } catch (IOException e) {
-
+        } catch (Exception e) {
+            System.out.println("Error: getUri Exception");
         }
         return fruitListResponse;
     }
 
+    // @GET
+    public List<Fruit> getUriId(int id) {
+        List<Fruit> fruitListResponse = new ArrayList<>();
+        try {
+            URI uri = new URIBuilder().setScheme("http").setHost("localhost").setPort(8080).setPath("/client/fruit/" + id).build();
+            System.out.println(uri);
+            HttpGet httpGet = new HttpGet(uri);
+            httpGet.setHeader("Accept", "application/json");
+
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+
+            HttpEntity entity = response.getEntity();
+            String textJsonArray = EntityUtils.toString(entity);
+            // System.out.println(textJsonArray);
+            fruitListResponse = toListFromJson(textJsonArray);
+            response.close();
+        } catch (Exception e) {
+            System.out.println("Error: getUri Exception");
+        }
+        return fruitListResponse;
+    }
 
 
     // @PUT
@@ -99,5 +113,45 @@ public class ClientHttpRequests {
             System.out.println("Error: putUri Exception");
         }
     }
+
+
+    // @POST
+    public void postUri(int id, String name, double price, int quantity) {
+        try {
+            URI uri = new URIBuilder().setScheme("http").setHost("localhost").setPort(8080)
+                    .setPath("/client/update/fruit/" + id).build();
+            HttpPost httpPost = new HttpPost(uri);
+            httpPost.setHeader("Accept", "text/html");
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(id)));
+            nameValuePairs.add(new BasicNameValuePair("name", name));
+            nameValuePairs.add(new BasicNameValuePair("price", String.valueOf(price)));
+            nameValuePairs.add(new BasicNameValuePair("quantity", String.valueOf(quantity)));
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            response.close();
+        } catch (Exception e) {
+            System.out.println("Error: postUri Exception");
+        }
+    }
+
+    // @DELETE
+    public void deleteUri(int id) {
+        try {
+            URI uri = new URIBuilder().setScheme("http").setHost("localhost").setPort(8080)
+                    .setPath("/client/delete/fruit/" + id).build();
+            HttpDelete httpDelete = new HttpDelete(uri);
+            httpDelete.setHeader("Accept", "text/html");
+
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpResponse response = httpClient.execute(httpDelete);
+            response.close();
+        } catch (Exception e) {
+            System.out.println("Error: deleteUri Exception");
+        }
+    }
+
 
 }

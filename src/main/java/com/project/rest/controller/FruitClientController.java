@@ -33,25 +33,26 @@ public class FruitClientController {
     }
 
     // CLIENT GET DATA BY ID LIST<FRUIT>
-    @GetMapping(value = "/client/fruits/{id}")
-    public void getByIdFruitObject(@PathVariable int id) {
+    @GetMapping(value = "/client/fruit/{id}")
+    public List<Fruit> getByIdFruitObject(@PathVariable int id) {
         ReceiveFruitList receiveFruitList = restTemplate.getForObject("http://localhost:8080/server/fruit/" + id + " ", ReceiveFruitList.class);
         log.info("[CLIENT] [@GET] - Received from [SERVER] Search ArrayList: " + receiveFruitList.getMyDataList());
+        return receiveFruitList.getMyDataList();
     }
 
     // CLIENT PUT LIST<FRUIT>
-    @PutMapping(value = "/client/create/fruit/{id}")
+    @PostMapping(value = "/client/create/fruit/{id}")
     public void putFruit(@PathVariable int id, @RequestParam(value = "name") String name, @RequestParam(value = "price") double price, @RequestParam(value = "quantity") int quantity) {
         Fruit fruit = new Fruit(id, name, price, quantity);
-        restTemplate.put("http://localhost:8080/server/create/fruit/" + id + " ", fruit);
+        restTemplate.postForLocation("http://localhost:8080/server/create/fruit/" + id + " ", fruit);
         log.info("[CLIENT] [@PUT] - Sent [SERVER] to add: " + fruit);
     }
 
     // CLIENT POST LIST<FRUIT>
-    @PostMapping(value = "/client/update/fruit/{id}")
+    @PutMapping(value = "/client/update/fruit/{id}")
     public void postFruit(@PathVariable int id, @RequestParam(value = "name") String name, @RequestParam(value = "price") double price, @RequestParam(value = "quantity") int quantity) {
         Fruit fruit = new Fruit(id, name, price, quantity);
-        restTemplate.postForLocation("http://localhost:8080/server/update/fruit/" + id + " ", fruit);
+        restTemplate.put("http://localhost:8080/server/update/fruit/" + id + " ", fruit);
         log.info("[CLIENT] [@POST] - Sent [SERVER] to update: " + fruit);
     }
 

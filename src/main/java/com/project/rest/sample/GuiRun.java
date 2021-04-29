@@ -1,23 +1,15 @@
 package com.project.rest.sample;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.project.rest.models.Fruit;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuiRun {
 
-    private JButton button1;
+    private JButton getRefresh;
     private JPanel panelMain;
     private JTable showTable;
     private JTextField textField1;
@@ -26,22 +18,23 @@ public class GuiRun {
     private JTextField putPrice;
     private JTextField putQuantity;
     private JButton putButton;
-    private JTextField postId;
+    private JTextField postID;
     private JTextField postName;
     private JTextField postPrice;
     private JTextField postQuantity;
+    private JButton postButton;
+    private JButton deleteButton;
+    private JTextField deleteID;
+    private JButton getIDButton;
+    private JTextField getID;
     private DefaultTableModel tableModel;
 
     public GuiRun() {
 
-        button1.addActionListener(new ActionListener() {
+        getRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // textField1.getText();
-                System.out.println(textField1.getText());
-                //textField1.setText("");
-
-
+                refreshTable();
             }
         });
 
@@ -56,8 +49,8 @@ public class GuiRun {
 
                 ClientHttpRequests clientHttpRequests = new ClientHttpRequests();
                 clientHttpRequests.putUri(id, name, price, quantity);
+
                 refreshTable();
-                //  getFruit();
 
                 putID.setText("");
                 putName.setText("");
@@ -65,14 +58,57 @@ public class GuiRun {
                 putQuantity.setText("");
             }
         });
+
+        postButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(postID.getText());
+                String name = postName.getText();
+                double price = Double.parseDouble(postPrice.getText());
+                int quantity = Integer.parseInt(postQuantity.getText());
+
+                ClientHttpRequests clientHttpRequests = new ClientHttpRequests();
+                clientHttpRequests.postUri(id, name, price, quantity);
+
+                refreshTable();
+
+                postID.setText("");
+                postName.setText("");
+                postPrice.setText("");
+                postQuantity.setText("");
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int id = Integer.parseInt(deleteID.getText());
+
+                ClientHttpRequests clientHttpRequests = new ClientHttpRequests();
+                clientHttpRequests.deleteUri(id);
+
+                refreshTable();
+
+                deleteID.setText("");
+            }
+        });
+        getIDButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int id = Integer.parseInt(getID.getText());
+                System.out.println(id);
+                refreshSearchTable(id);
+                getID.setText("");
+            }
+        });
         createTable();
         refreshTable();
+
     }
 
 
     public void refreshTable() {
         ClientHttpRequests clientHttpRequests = new ClientHttpRequests();
-        clientHttpRequests.getUri();
 
         DefaultTableModel model = (DefaultTableModel) showTable.getModel();
         model.setRowCount(0);
@@ -84,15 +120,28 @@ public class GuiRun {
             rowData1[3] = fruit.getQuantity();
             model.addRow(rowData1);
         }
+    }
 
+    public void refreshSearchTable(int id) {
+        ClientHttpRequests clientHttpRequests = new ClientHttpRequests();
 
+        DefaultTableModel model = (DefaultTableModel) showTable.getModel();
+        model.setRowCount(0);
+        for (Fruit fruit : clientHttpRequests.getUriId(id)) {
+            Object rowData1[] = new Object[4];
+            rowData1[0] = fruit.getId();
+            rowData1[1] = fruit.getName();
+            rowData1[2] = fruit.getPrice();
+            rowData1[3] = fruit.getQuantity();
+            model.addRow(rowData1);
+        }
     }
 
 
     public void createTable() {
         showTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"ID", "Name", "Surname", "Age"}
+                new String[]{"ID", "Name", "Price", "Quantity"}
         ));
     }
 
@@ -101,9 +150,9 @@ public class GuiRun {
         frame.setContentPane(new GuiRun().panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+
         frame.setVisible(true);
     }
-
 
 
 }
